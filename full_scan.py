@@ -71,3 +71,4 @@ def check_lines(guess_lines, lines, depth):
 	return m
 		
 m = check_lines(all_lines, file_lines, 0)
+print("Max depth encountered: {}".format(m))
