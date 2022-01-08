@@ -2,7 +2,7 @@
 #file_lines = f.readlines()
 from word_list import poss_words as file_lines
 
-all_w = open("r_words_ext.txt","r")
+all_w = open("words.txt","r")
 
 all_lines = all_w.readlines()
 
@@ -53,10 +53,10 @@ def check_lines(guess_lines, lines, depth):
 			chosen_word = w1
 			srmat = rmat
 	print("Min wc: {}, chosen word: {}, depth: {}".format(min_wc, chosen_word,depth))
-	newsmat = {}	
-	for sr in srmat:
-		if len(srmat[sr]) > 5 - depth:
-			newsmat[sr] = srmat[sr]
+	newsmat = srmat	
+	#for sr in srmat:
+	#	if len(srmat[sr]) > 5 - depth:
+	#		newsmat[sr] = srmat[sr]
 	m = depth
 	it_keys = newsmat.keys()
 	for key in it_keys:
