@@ -7,6 +7,23 @@ all_lines = all_w.readlines()
 
 count = 0
 
+from functools import lru_cache
+
+@lru_cache(maxsize=None)
+def calc_response_vector(w1,w2):
+    tw2 = w2
+    msum = [0 for i in range(5)]
+    for c_ind in range(5):
+        if w1[c_ind] == tw2[c_ind]:
+            msum[c_ind] = 2
+            tw2 = tw2[:c_ind] + "*" + tw2[c_ind+1:]
+    for c_ind in range(5):
+        if w1[c_ind] in tw2 and msum[c_ind] == 0:
+            msum[c_ind] = 1
+            ind_app = tw2.find(w1[c_ind])
+            tw2 = tw2[:ind_app] + "*" + tw2[ind_app+1:]
+    return msum
+
 
 
 for round in range(6):
@@ -24,17 +41,7 @@ for round in range(6):
 		rmat = {}
 		for w2 in lines:
 			w2 = w2.strip()
-			tw2 = w2
-			msum = [0 for i in range(5)]
-			for c_ind in range(5):
-				if w1[c_ind] == tw2[c_ind]:
-					msum[c_ind] = 2
-					tw2 = tw2[:c_ind] + "*" + tw2[c_ind+1:]
-			for c_ind in range(5):
-				if w1[c_ind] in tw2 and msum[c_ind] == 0:
-					msum[c_ind] = 1
-					ind_app = tw2.find(w1[c_ind])
-					tw2 = tw2[:ind_app] + "*" + tw2[ind_app+1:]
+			msum = calc_response_vector(w1,w2)
 			if tuple(msum) not in rmat:
 				rmat[tuple(msum)] = [w2]
 			else:
