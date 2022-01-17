@@ -18,10 +18,6 @@ def calc_response_vector(target,guess):
             msum[c_ind] = 1
             ind_app = tw2.find(w1[c_ind])
             tw2 = tw2[:ind_app] + "*" + tw2[ind_app+1:]
-    #same_letter = [x[0]==x[1] for x in zip(target,guess)]
-    #known_letter = [x in target for x in guess]
-    #zip_res = [x[0]+x[1] for x in zip(same_letter, known_letter)]
-    #print("msum={},zip_res={}".format(msum,zip_res))
     return msum
 
 def run_game(target):
