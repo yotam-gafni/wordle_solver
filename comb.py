@@ -31,7 +31,7 @@ for round in range(6):
 	chosen_word = ""
 	srmat = {}
 	if round != 0:
-		all_it = all_lines[:1000]
+		all_it = all_lines
 	else:
 		all_it = ["snare"]
 
