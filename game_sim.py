@@ -49,33 +49,40 @@ all_w = open("words.txt","r")
 all_lines_words = [x.strip() for x in all_w.readlines()]
 snare_idx = all_lines_words.index("snare")
 
-
+srmat_memoize_cache = {}
+def calc_srmat(all_lines, lines, past_guesses_feedbacks):
+    if past_guesses_feedbacks in srmat_memoize_cache:
+        return srmat_memoize_cache[past_guesses_feedbacks]
+    min_wc = 100000
+    chosen_word = -1
+    srmat = {}
+    if len(past_guesses_feedbacks) != 0:
+        all_it = all_lines
+    else:
+        all_it = [snare_idx]
+    for w1 in all_it:
+        rmat = {}
+        for w2 in lines:
+            msum = calc_response_vector(w1,w2)
+            if msum not in rmat:
+                rmat[msum] = [w2]
+            else:
+                rmat[msum].append(w2)
+        M = max([len(val) for val in rmat.values()])
+        if M < min_wc:
+            min_wc = M
+            chosen_word = w1
+            srmat = rmat
+    srmat_memoize_cache[past_guesses_feedbacks] = (srmat, chosen_word)
+    return (srmat,chosen_word)
 
 def run_game(target):
     all_lines = range(len(all_lines_words))
     lines = range(len(all_lines_words))
     target_idx = all_lines_words.index(target)
+    guess_trace = []
     for round in range(10):
-        min_wc = 100000
-        chosen_word = ""
-        srmat = {}
-        if round != 0:
-            all_it = all_lines
-        else:
-            all_it = [snare_idx]
-        for w1 in all_it:
-            rmat = {}
-            for w2 in lines:
-                msum = calc_response_vector(w1,w2)
-                if msum not in rmat:
-                    rmat[msum] = [w2]
-                else:
-                    rmat[msum].append(w2)
-            M = max([len(val) for val in rmat.values()])
-            if M < min_wc:
-                min_wc = M
-                chosen_word = w1
-                srmat = rmat
+        (srmat,chosen_word) = calc_srmat(all_lines,lines,tuple(guess_trace))
         print(all_lines_words[chosen_word])
         #inp = input()
         #print(inp)
@@ -84,6 +91,7 @@ def run_game(target):
         feedback = msum_to_int(tuple([int(el) for el in inp]))
         if feedback not in srmat:
             print("Unexpected feedback {}, srmat: {}".format(feedback,srmat))
+        guess_trace.append((chosen_word,feedback))
         lines = srmat[feedback]
         if len(lines) == 1:
             print("Done. Final word is {}".format(all_lines_words[lines[0]]))
