@@ -1,5 +1,6 @@
 from functools import lru_cache
 from collections import defaultdict
+import math
 #import numpy
 
 #f = open("2500.txt","r")
@@ -69,6 +70,7 @@ def check_lines(guess_lines, lines, depth, histogram):
         histo[depth+1] += 1
         return (depth+1,depth+1)
     min_wc = 100000
+    max_entropy = 0
     chosen_word = ""
     srmat = {}
     if depth != 0:
@@ -111,8 +113,13 @@ def check_lines(guess_lines, lines, depth, histogram):
                 rmat[msum].append(w2)
 
         M = max([len(val) for val in rmat.values()])
-        if M < min_wc:
+        dict_len = float(len(lines))
+        Entropy = -1 * sum([len(val)/dict_len*math.log(len(val)/dict_len) for val in rmat.values()])
+        if Entropy > max_entropy:
+        #if M < min_wc:
+            print("M:{},Entropy:{}".format(M, Entropy))
             min_wc = M
+            max_entropy = Entropy
             chosen_word = w1
             srmat = rmat
     print("Min wc: {}, chosen word: {}, depth: {}".format(min_wc, chosen_word,depth))
