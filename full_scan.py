@@ -18,7 +18,7 @@ hard_mode = False
 
 how_deep = 0
 
-
+Verbose = False
 
 def msum_to_int(msum):
     total = 0
@@ -117,12 +117,14 @@ def check_lines(guess_lines, lines, depth, histogram):
         Entropy = -1 * sum([len(val)/dict_len*math.log(len(val)/dict_len) for val in rmat.values()])
         if Entropy > max_entropy:
         #if M < min_wc:
-            print("M:{},Entropy:{}".format(M, Entropy))
+            if Verbose:
+                print("M:{},Entropy:{}".format(M, Entropy))
             min_wc = M
             max_entropy = Entropy
             chosen_word = w1
             srmat = rmat
-    print("Min wc: {}, chosen word: {}, depth: {}".format(min_wc, chosen_word,depth))
+    if Verbose:
+        print("Min wc: {}, chosen word: {}, depth: {}".format(min_wc, chosen_word,depth))
     newsmat = srmat
     #for sr in srmat:
     #	if len(srmat[sr]) > 5 - depth:
@@ -136,7 +138,7 @@ def check_lines(guess_lines, lines, depth, histogram):
             max_depth,total_steps_sub = check_lines(elem, elem, depth+1, histo)
         else:
             max_depth,total_steps_sub = check_lines(guess_lines, elem, depth+1, histo)
-        if max_depth > 5 and depth in [2,3]:
+        if Verbose and max_depth > 5 and depth in [2,3]:
             print("Key: {}, depth: {}".format(key,depth))
         m = max(m,max_depth)
         total_steps += total_steps_sub
