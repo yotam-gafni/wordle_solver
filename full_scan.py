@@ -63,7 +63,7 @@ global miss_count
 hit_count = 0
 miss_count = 0
 
-def check_lines(guess_lines, lines, depth, histogram):
+def check_lines(guess_lines, lines, depth, histogram, start_word):
     global hit_count
     global miss_count
     if len(lines) == 1:
@@ -76,8 +76,8 @@ def check_lines(guess_lines, lines, depth, histogram):
     if depth != 0:
         all_it = guess_lines
     else:
-        all_it = guess_lines
-        #all_it = ["snare"]
+        #all_it = guess_lines
+        all_it = [start_word]
 
     for w1 in all_it:
         rmat = {}
@@ -135,9 +135,9 @@ def check_lines(guess_lines, lines, depth, histogram):
     for key in it_keys:
         elem = newsmat[key]
         if hard_mode:
-            max_depth,total_steps_sub = check_lines(elem, elem, depth+1, histo)
+            max_depth,total_steps_sub = check_lines(elem, elem, depth+1, histo, None)
         else:
-            max_depth,total_steps_sub = check_lines(guess_lines, elem, depth+1, histo)
+            max_depth,total_steps_sub = check_lines(guess_lines, elem, depth+1, histo, None)
         if Verbose and max_depth > 5 and depth in [2,3]:
             print("Key: {}, depth: {}".format(key,depth))
         m = max(m,max_depth)
@@ -145,7 +145,11 @@ def check_lines(guess_lines, lines, depth, histogram):
     return (m, total_steps)
 
 histo = defaultdict(int)
-m = check_lines(all_lines, file_lines, 0, histo)
-print("Max depth encountered: {}".format(m))
-print("Hits: {}, Misses: {}".format(hit_count, miss_count))
-print(histo)
+for start_w in range(len(all_lines_words)):
+    m = check_lines(all_lines, file_lines, 0, histo, start_w)
+    print("For word {}: Max depth encountered: {}".format(all_lines_words[start_w],m))
+    print("Hits: {}, Misses: {}".format(hit_count, miss_count))
+    print(histo)
+    hit_count = 0
+    miss_count = 0
+    histo.clear()
