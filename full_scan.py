@@ -131,11 +131,43 @@ def check_lines(guess_lines, lines, depth, histogram, start_word):
     #		newsmat[sr] = srmat[sr]
     m = depth
     total_steps = 0
+    possible_words_mat = {}
+    if hard_mode:
+        w1 = chosen_word
+        for w2 in guess_lines:
+            if (w1,w2) in responseCache:
+                msum = responseCache[(w1,w2)]
+                hit_count += 1
+            else:
+                miss_count += 1
+                w1_s = all_lines_words[w1]
+                w2_s = all_lines_words[w2]
+                tw2 = str(w2_s)
+                msum_int = 0
+                msum_vec = [0 for i in range(5)]
+                for c_ind in range(5):
+                    if w1_s[c_ind] == tw2[c_ind]:
+                        msum_vec[c_ind] = 2
+                        msum_int += 2 * (3**c_ind)
+                        tw2 = tw2[:c_ind] + "*" + tw2[c_ind+1:]
+                for c_ind in range(5):
+                    if w1_s[c_ind] in tw2 and msum_vec[c_ind] == 0:
+                        #msum[c_ind] = 1
+                        msum_int += 1 * (3**c_ind)
+                        ind_app = tw2.find(w1_s[c_ind])
+                        tw2 = tw2[:ind_app] + "*" + tw2[ind_app+1:]
+                responseCache[(w1,w2)] = msum_int #msum_to_int(tuple(msum))
+                msum = msum_int
+
+            if msum not in possible_words_mat:
+                possible_words_mat[msum] = [w2]
+            else:
+                possible_words_mat[msum].append(w2)
     it_keys = newsmat.keys()
     for key in it_keys:
         elem = newsmat[key]
         if hard_mode:
-            max_depth,total_steps_sub = check_lines(elem, elem, depth+1, histo, None)
+            max_depth,total_steps_sub = check_lines(possible_words_mat[key], elem, depth+1, histo, None)
         else:
             max_depth,total_steps_sub = check_lines(guess_lines, elem, depth+1, histo, None)
         if Verbose and max_depth > 5 and depth in [2,3]:
