@@ -1,15 +1,14 @@
 #f = open("2500.txt","r")
 #file_lines = f.readlines()
-from word_list import poss_words as file_lines
+if __name__ == '__main__':
+	from word_list import poss_words as file_lines
 
-all_w = open("words.txt","r")
+	all_w = open("words.txt","r")
 
-all_lines = all_w.readlines()
+	all_lines = all_w.readlines()
 
 
 hard_mode = False
-
-how_deep = 0
 
 
 def check_lines(guess_lines, lines, depth): 
@@ -52,7 +51,7 @@ def check_lines(guess_lines, lines, depth):
 			min_wc = M
 			chosen_word = w1
 			srmat = rmat
-	print("Min wc: {}, chosen word: {}, depth: {}".format(min_wc, chosen_word,depth))
+	#print("Min wc: {}, chosen word: {}, depth: {}".format(min_wc, chosen_word,depth))
 	newsmat = srmat	
 	#for sr in srmat:
 	#	if len(srmat[sr]) > 5 - depth:
@@ -70,5 +69,6 @@ def check_lines(guess_lines, lines, depth):
 		m = max(m,curr)
 	return m
 		
-m = check_lines(all_lines, file_lines, 0)
-print("Max depth encountered: {}".format(m))
+if __name__ == '__main__':
+	m = check_lines(all_lines, file_lines, 0)
+	print("Max depth encountered: {}".format(m))
