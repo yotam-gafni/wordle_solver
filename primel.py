@@ -1,5 +1,12 @@
 from math import sqrt 
-from full_scan import check_lines
+from full_scan import FullScan
+from collections import defaultdict
+
+Verbose = True
+
+def printv(st):
+	if Verbose:
+		print(st)
 
 def is_prime(num):
 	for div in range(2,int(sqrt(num))):
@@ -11,7 +18,7 @@ all_primes = []
 for num in range(10 * 1000, 100 * 1000):
 	if is_prime(num):
 		all_primes.append(num)
-print(all_primes)
+printv(all_primes)
 
 max_unq = 0
 
@@ -24,8 +31,8 @@ for p1 in all_primes:
 			argmax_unq = [p1,p2]
 		if max_unq == 10:
 			break
-print(max_unq)
-print(argmax_unq)
+printv(max_unq)
+printv(argmax_unq)
 
 perm_dic = {}
 guess_dic = {}
@@ -49,23 +56,28 @@ for elem in perm_dic:
 	if perm_dic[elem] > 4:
 		count += 1
 		all_over_top.append(perm_dic[elem])
-		res = check_lines(guess_dic[elem], guess_dic[elem], 0)
-		if res > 3:
-			print("Failure. res: {}, guess_dic: {}".format(res, guess_dic[elem]))
+		histo = defaultdict(int)
+		fs = FullScan(guess_dic[elem], guess_dic[elem], histo)
+		res = fs.check_lines(fs.all_lines, fs.file_lines, 0, None)
+		if res[0] > 4:
+			printv("Failure. res: {}, guess_dic: {}".format(res, guess_dic[elem]))
 			success = False
 			break
 
 argmax_perm = max(perm_dic, key=perm_dic.get)
 max_perm = perm_dic[argmax_perm]
 
-print(max_perm)
-print(argmax_perm)
-print(count)
-print(all_over_top)
+printv(max_perm)
+printv(argmax_perm)
+printv(count)
+printv(all_over_top)
 if success:
 	print("Success: Can solve primel in at most 6 guesses")
 
-
+#histo = defaultdict(int)
+#fs = FullScan(["hello"], ["hello"], histo)
+#res = fs.check_lines(fs.all_lines, fs.file_lines, 0, None)
+#print(res)
 
 
 	
