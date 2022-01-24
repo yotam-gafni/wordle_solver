@@ -33,7 +33,7 @@ for round in range(6):
 	if round != 0:
 		all_it = all_lines
 	else:
-		all_it = ["aeris"]
+		all_it = ["aesir"]
 
 	for w1 in all_it:
 		w1 = w1.strip()
