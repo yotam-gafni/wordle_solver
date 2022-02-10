@@ -25,13 +25,14 @@ def check_lines(guess_lines, lines, depth):
 		
 		for w2 in lines:
 			tw2 = w2 = w2.strip()
-			msum = [0] * 5
+			msum = [0 for i in range(5)]
 						
 			for c_ind in range(5):
 				if w1[c_ind] == tw2[c_ind]:
 					msum[c_ind] = 2
 					tw2 = f"{tw2[:c_ind]}*{tw2[c_ind+1:]}"
-				elif w1[c_ind] in tw2:
+			for c_ind in range(5):
+				if w1[c_ind] in tw2:
 					msum[c_ind] = 1
 					ind_app = tw2.find(w1[c_ind])
 					tw2 = f"{tw2[:ind_app]}*{tw2[ind_app+1:]}"
